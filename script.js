@@ -8,44 +8,49 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 const now = moment();
 const date = new Date(now.year(), now.month(), now.date());
 
+
 // Example coordinates (Mecca) - You'll likely want to make this dynamic
 const latitude = 21.4225;
 const longitude = 39.8262;
 
-// Prayer Time Calculation
-try {  // Wrap in a try-catch to handle potential errors
+try {
+    // Use adhan correctly (it's available as a global object after the CDN inclusion)
     const coordinates = new adhan.Coordinates(latitude, longitude);
     const params = adhan.CalculationParameters.muslimWorldLeague(); // Or another method
     const prayerTimes = new adhan.PrayerTimes(coordinates, date, params);
 
-    // Display prayer times in the console (for now)
-    console.log("Fajr:", prayerTimes.fajr.format('HH:mm')); // Format as HH:MM
-    console.log("Sunrise:", prayerTimes.sunrise.format('HH:mm'));
-    console.log("Dhuhr:", prayerTimes.dhuhr.format('HH:mm'));
-    console.log("Asr:", prayerTimes.asr.format('HH:mm'));
-    console.log("Maghrib:", prayerTimes.maghrib.format('HH:mm'));
-    console.log("Isha:", prayerTimes.isha.format('HH:mm'));
+    // Format times using moment.js (make sure it's included)
+    const fajrTime = prayerTimes.fajr.format('HH:mm');
+    const sunriseTime = prayerTimes.sunrise.format('HH:mm');
+    const dhuhrTime = prayerTimes.dhuhr.format('HH:mm');
+    const asrTime = prayerTimes.asr.format('HH:mm');
+    const maghribTime = prayerTimes.maghrib.format('HH:mm');
+    const ishaTime = prayerTimes.isha.format('HH:mm');
 
-    // Display prayer times on the map (example - adapt as needed)
+    console.log("Fajr:", fajrTime); // Log the formatted times
+    console.log("Sunrise:", sunriseTime);
+    console.log("Dhuhr:", dhuhrTime);
+    console.log("Asr:", asrTime);
+    console.log("Maghrib:", maghribTime);
+    console.log("Isha:", ishaTime);
+
     const prayerTimesPopup = `
-        Fajr: ${prayerTimes.fajr.format('HH:mm')}<br>
-        Sunrise: ${prayerTimes.sunrise.format('HH:mm')}<br>
-        Dhuhr: ${prayerTimes.dhuhr.format('HH:mm')}<br>
-        Asr: ${prayerTimes.asr.format('HH:mm')}<br>
-        Maghrib: ${prayerTimes.maghrib.format('HH:mm')}<br>
-        Isha: ${prayerTimes.isha.format('HH:mm')}
+        Fajr: ${fajrTime}<br>
+        Sunrise: ${sunriseTime}<br>
+        Dhuhr: ${dhuhrTime}<br>
+        Asr: ${asrTime}<br>
+        Maghrib: ${maghribTime}<br>
+        Isha: ${ishaTime}
     `;
 
     L.marker([latitude, longitude]).addTo(map)
         .bindPopup(prayerTimesPopup)
-        .openPopup(); // Optionally open the popup immediately
+        .openPopup();
 
 } catch (error) {
     console.error("Error calculating prayer times:", error);
-    // Handle the error gracefully, e.g., display a message on the map
     alert("An error occurred while calculating prayer times. Please check the console for details.");
 }
-
 
 // ... (rest of your code - adding markers for other locations, handling user input, etc.) ...
 
