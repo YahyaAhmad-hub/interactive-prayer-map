@@ -1,4 +1,10 @@
 document.addEventListener("DOMContentLoaded", function() {
+    if (typeof adhan !== 'undefined') {
+        console.log('Adhan library is loaded');
+    } else {
+        console.error('Adhan library is not loaded');
+    }
+    
     // Initialize map
     const map = L.map('map').setView([21.4225, 39.8262], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -51,17 +57,5 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // ... (rest of your code - updating prayer times dynamically, etc.) ...
 });
-// ... (rest of your code)
-
-// Example of adding a marker for another location (you'll likely want to make this dynamic)
-const anotherLatitude = 24.4711; // Medina
-const anotherLongitude = 39.6039;
-L.marker([anotherLatitude, anotherLongitude]).addTo(map)
-    .bindPopup('Medina');
 
 
-// Example of getting the current time in a specific format
-const currentTime = moment().format('HH:mm');
-console.log("Current Time:", currentTime);
-
-// ... (rest of your code - updating prayer times dynamically, etc.) ...
