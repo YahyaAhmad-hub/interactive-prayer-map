@@ -1,5 +1,3 @@
-import { Coordinates, CalculationParameters, PrayerTimes } from 'adhan';
-
 // Initialize map
 const map = L.map('map').setView([21.4225, 39.8262], 13); // Mecca coordinates
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -8,39 +6,58 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 // Get current date and time
 const now = moment();
-const date = new Date(now.year(), now.month(), now.date()); // Convert moment to Date object
+const date = new Date(now.year(), now.month(), now.date());
 
-// Example coordinates (Mecca)
+// Example coordinates (Mecca) - You'll likely want to make this dynamic
 const latitude = 21.4225;
 const longitude = 39.8262;
 
-const coordinates = new Coordinates(latitude, longitude);
-const params = CalculationParameters.muslimWorldLeague(); // Or any other method
-const prayerTimes = new PrayerTimes(coordinates, date, params);
+// Prayer Time Calculation
+try {  // Wrap in a try-catch to handle potential errors
+    const coordinates = new adhan.Coordinates(latitude, longitude);
+    const params = adhan.CalculationParameters.muslimWorldLeague(); // Or another method
+    const prayerTimes = new adhan.PrayerTimes(coordinates, date, params);
 
-// Display prayer times (example)
-console.log("Fajr:", prayerTimes.fajr);
-console.log("Sunrise:", prayerTimes.sunrise);
-console.log("Dhuhr:", prayerTimes.dhuhr);
-console.log("Asr:", prayerTimes.asr);
-console.log("Maghrib:", prayerTimes.maghrib);
-console.log("Isha:", prayerTimes.isha);
+    // Display prayer times in the console (for now)
+    console.log("Fajr:", prayerTimes.fajr.format('HH:mm')); // Format as HH:MM
+    console.log("Sunrise:", prayerTimes.sunrise.format('HH:mm'));
+    console.log("Dhuhr:", prayerTimes.dhuhr.format('HH:mm'));
+    console.log("Asr:", prayerTimes.asr.format('HH:mm'));
+    console.log("Maghrib:", prayerTimes.maghrib.format('HH:mm'));
+    console.log("Isha:", prayerTimes.isha.format('HH:mm'));
 
-// Add a marker to the map (optional)
-L.marker([latitude, longitude]).addTo(map)
-    .bindPopup('Mecca');
+    // Display prayer times on the map (example - adapt as needed)
+    const prayerTimesPopup = `
+        Fajr: ${prayerTimes.fajr.format('HH:mm')}<br>
+        Sunrise: ${prayerTimes.sunrise.format('HH:mm')}<br>
+        Dhuhr: ${prayerTimes.dhuhr.format('HH:mm')}<br>
+        Asr: ${prayerTimes.asr.format('HH:mm')}<br>
+        Maghrib: ${prayerTimes.maghrib.format('HH:mm')}<br>
+        Isha: ${prayerTimes.isha.format('HH:mm')}
+    `;
 
-// On map click, show prayer times
-map.on('click', (e) => {
-  const { lat, lng } = e.latlng;
-  const date = new Date(datetimeInput.value);
+    L.marker([latitude, longitude]).addTo(map)
+        .bindPopup(prayerTimesPopup)
+        .openPopup(); // Optionally open the popup immediately
 
-  // Get prayer period
-  const period = getPrayerPeriod(lat, lng, date);
+} catch (error) {
+    console.error("Error calculating prayer times:", error);
+    // Handle the error gracefully, e.g., display a message on the map
+    alert("An error occurred while calculating prayer times. Please check the console for details.");
+}
 
-  // Show popup
-  L.popup()
-    .setLatLng([lat, lng])
-    .setContent(`Current Prayer: ${period}`)
-    .openOn(map);
-});
+
+// ... (rest of your code - adding markers for other locations, handling user input, etc.) ...
+
+// Example of adding a marker for another location (you'll likely want to make this dynamic)
+const anotherLatitude = 24.4711; // Medina
+const anotherLongitude = 39.6039;
+L.marker([anotherLatitude, anotherLongitude]).addTo(map)
+    .bindPopup('Medina');
+
+
+// Example of getting the current time in a specific format
+const currentTime = moment().format('HH:mm');
+console.log("Current Time:", currentTime);
+
+// ... (rest of your code - updating prayer times dynamically, etc.) ...
