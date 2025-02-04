@@ -1,39 +1,34 @@
-console.log('Adhan library:', Adhan); // Check if Adhan is defined
+import { Coordinates, CalculationParameters, PrayerTimes } from 'adhan';
 
-// Initialize the map
-const map = L.map('map').setView([24.7136, 46.6753], 3); // Center on Saudi Arabia
-
-// Add OpenStreetMap tiles
+// Initialize map
+const map = L.map('map').setView([21.4225, 39.8262], 13); // Mecca coordinates
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  attribution: '© OpenStreetMap contributors'
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 
-// ... other code ...
+// Get current date and time
+const now = moment();
+const date = new Date(now.year(), now.month(), now.date()); // Convert moment to Date object
 
-// Correct way to use moment and adhan in the browser:
-const now = moment(); // No require!
-console.log("Current time:", now.format()); // Example using moment
+// Example coordinates (Mecca)
+const latitude = 21.4225;
+const longitude = 39.8262;
 
-const coordinates = new adhan.Coordinates(latitude, longitude); // No require!
-const params = adhan.CalculationParameters.muslimWorldLeague();
-const prayerTimes = new adhan.PrayerTimes(coordinates, date, params);
-console.log("Prayer Times:", prayerTimes.fajr); // Example using adhan
+const coordinates = new Coordinates(latitude, longitude);
+const params = CalculationParameters.muslimWorldLeague(); // Or any other method
+const prayerTimes = new PrayerTimes(coordinates, date, params);
 
-// ... rest of your code ...
+// Display prayer times (example)
+console.log("Fajr:", prayerTimes.fajr);
+console.log("Sunrise:", prayerTimes.sunrise);
+console.log("Dhuhr:", prayerTimes.dhuhr);
+console.log("Asr:", prayerTimes.asr);
+console.log("Maghrib:", prayerTimes.maghrib);
+console.log("Isha:", prayerTimes.isha);
 
-// Get the datetime input
-// const datetimeInput = document.getElementById('datetime');
-
-// Set default datetime to now
-// datetimeInput.value = new Date().toISOString().slice(0, 16);
-
-// Function to calculate prayer times
-// function getPrayerPeriod(lat, lng, date) {
-//  const coordinates = new Adhan.Coordinates(lat, lng);
-//  const params = Adhan.CalculationMethod.MuslimWorldLeague();
-//  const prayerTimes = new Adhan.PrayerTimes(coordinates, date, params);
-//  return prayerTimes.currentPeriod(date);
-// }
+// Add a marker to the map (optional)
+L.marker([latitude, longitude]).addTo(map)
+    .bindPopup('Mecca');
 
 // On map click, show prayer times
 map.on('click', (e) => {
