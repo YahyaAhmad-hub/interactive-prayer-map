@@ -22,13 +22,6 @@ try {
     const maghribTime = moment(prayerTimes.maghrib).format('HH:mm');
     const ishaTime = moment(prayerTimes.isha).format('HH:mm');
 
-    console.log("Fajr:", fajrTime);
-    console.log("Sunrise:", sunriseTime);
-    console.log("Dhuhr:", dhuhrTime);
-    console.log("Asr:", asrTime);
-    console.log("Maghrib:", maghribTime);
-    console.log("Isha:", ishaTime);
-
     const prayerTimesPopup = `
         Fajr: ${fajrTime}<br>
         Sunrise: ${sunriseTime}<br>
@@ -38,9 +31,7 @@ try {
         Isha: ${ishaTime}
     `;
 
-    L.marker([latitude, longitude]).addTo(map)
-        .bindPopup(prayerTimesPopup)
-        .openPopup();
+    L.marker([latitude, longitude]).addTo(map).bindPopup(prayerTimesPopup).openPopup();
 
 } catch (error) {
     console.error("Error calculating prayer times:", error);
